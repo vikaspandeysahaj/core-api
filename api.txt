@@ -1,0 +1,69 @@
+User
+    user_id
+    name
+    mobile
+    email
+    about
+    profile_image_url
+    profile_banner_url
+    role_id
+    geo_location
+
+
+Role
+    role_id
+    title: [user, seller, admin]
+
+Shop
+    shop_id
+    user_id
+    name
+    address
+    phone
+    website
+    opening_time
+    closing_time
+    geo_location
+    shop_category_ids :[multiple ids]
+    geo_location
+    shop_profile_image_url
+    shop_profile_banner_url
+
+shop_category
+    category_id
+    title: [fashion, food, grocery, kids, electronics ]
+
+shop_category_mapping
+    fk_shop_id
+    fk_category_id
+
+offer
+    offer_id
+    shop_id
+    title
+    description
+    starting_time
+    closing_time
+    discount
+    banner_url
+    fk_category_id
+
+
+api:
+
+1. register user
+2. get user profile
+3. update user profile
+
+4. register shop for user
+5. update shop profile
+6. list shop
+7. shop details
+8. search shop
+
+9. create offer
+10. update offer
+11. list offers
+12. search offer
+
+

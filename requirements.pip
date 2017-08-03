@@ -1,0 +1,6 @@
+requests
+flask
+Flask-SQLAlchemy
+MySQL-python
+nose
+sqlalchemy-migrate
