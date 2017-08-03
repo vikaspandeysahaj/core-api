@@ -1,10 +1,11 @@
 import uuid
 
 from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import relationship
 
 from api.db_storage import storage
-from api.helper.db_helper import insert
+from api.helper.db_helper import insert, update
 from api.models.role import Role
 
 
@@ -73,6 +74,11 @@ class User(storage.sql_db.Model):
         insert(user)
         created_user = User.query.filter(User.user_id == user.user_id).all()
         return created_user[0] if created_user is not None else None
+
+    def update_profile(self, user_hash):
+        update(User, User.user_id == self.user_id, user_hash)
+        user = User.query.filter(User.user_id == self.user_id).all()
+        return user[0] if user else None
 
     @staticmethod
     def is_valid_hash_for_create(user_hash):

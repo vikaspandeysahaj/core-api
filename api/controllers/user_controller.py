@@ -34,3 +34,18 @@ def get_profile(user_id):
         print(e.message)
         print(traceback.print_exc())
         return dumps(e.message), 400
+
+@user_routes.route('/user/<user_id>/update', methods=['POST'])
+def update_profile(user_id):
+    try:
+        user_hash = get_user_json_attr_from_hash(request.json)
+        user = User.find_by_id(user_id)
+        if user:
+            user = user.update_profile(user_hash)
+            return dumps(user.as_json()), 200
+        else:
+            return dumps({"Error":"User Not found"}), 400
+    except Exception as e:
+        print(e.message)
+        print(traceback.print_exc())
+        return dumps(e.message), 400
