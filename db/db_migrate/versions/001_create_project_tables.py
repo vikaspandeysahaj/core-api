@@ -34,7 +34,7 @@ roles = Table(
 shops = Table(
    'shop', meta,
     Column('id', Integer, primary_key=True),
-    Column('shop_id', String(100)),
+    Column('shop_id', String(100), unique=True),
     Column('name', String(200)),
     Column('phone', Integer),
     Column('address', String(200)),
@@ -48,21 +48,21 @@ shops = Table(
 categories = Table(
    'category', meta,
    Column('id', Integer, primary_key=True),
-   Column('category_id', String(100)),
+   Column('category_id', String(100), unique=True),
    Column('title', String(100))
 )
 
 shop_category_mapping = Table(
    'shop_category_mapping', meta,
    Column('id', Integer, primary_key=True),
-   Column('fk_category_id', String(100)),
-   Column('fk_shop_id', String(100))
+   Column('fk_category_id', String(100), ForeignKey('category.category_id')),
+   Column('fk_shop_id', String(100), ForeignKey('shop.shop_id'))
 )
 
 offers = Table(
    'offer', meta,
    Column('id', Integer, primary_key=True),
-   Column('offer_id', String(100)),
+   Column('offer_id', String(100), unique=True),
    Column('title', String(200)),
    Column('discount', Float),
    Column('address', String(200)),

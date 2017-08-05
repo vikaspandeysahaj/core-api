@@ -4,7 +4,8 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
 from api.db_storage import storage
-from api.helper.db_helper import insert
+from api.helper.db_helper import insert, update
+from api.models.category import Category
 from api.models.shop_category_mapping import ShopCategoryMapping
 
 
@@ -53,13 +54,13 @@ class Shop(storage.sql_db.Model):
             'web_site': self.web_site,
             'shop_profile_banner_url': self.shop_profile_banner_url,
             'shop_profile_image_url': self.shop_profile_image_url,
-            'user': self.user.as_json(),
+            # 'user': self.user.as_json(),
             'geo_location': self.geo_location,
         }
         return property_hash
 
     @classmethod
-    def create_shop(cls, shop_hash=None):
+    def create_shop(cls, shop_hash=None, user=None):
         shop = Shop(shop_id= uuid.uuid1().hex,
                     name=shop_hash["name"],
                     phone=shop_hash["phone"],
@@ -67,11 +68,38 @@ class Shop(storage.sql_db.Model):
                     web_site=shop_hash["web_site"],
                     shop_profile_banner_url=shop_hash["shop_profile_banner_url"],
                     shop_profile_image_url=shop_hash["shop_profile_image_url"],
-                    user=shop_hash["user"],
+                    user=user,
                     geo_location=shop_hash['geo_location'])
+        category = shop_hash["category"]
         insert(shop)
+        category = Category.query.filter(Category.category_id == category['category_id']).all()[0]
         created_shop = Shop.query.filter(Shop.shop_id == shop.shop_id).all()
+        created_shop[0].assign_category(category=category)
         return created_shop[0] if created_shop is not None else None
+
+    def update_shop_details(self, shop_hash):
+        del shop_hash['category']
+        update(Shop, Shop.shop_id == self.shop_id, shop_hash)
+        shop = Shop.query.filter(Shop.shop_id == self.shop_id).all()
+        return shop[0] if shop else None
+
+    @staticmethod
+    def is_valid_hash_for_create(shop_hash):
+        errors = []
+        name = shop_hash['name']
+        errors.append({"name": "name cannot be blank"}) if not name else None
+
+        mobile = shop_hash['geo_location']
+        errors.append({"geo_location": "geo_location cannot be blank"}) if not mobile else None
+
+        category = shop_hash['category']
+        errors.append({"category": "category cannot be blank"}) if category.__len__()==0 else None
+
+
+        if not errors:
+            return True
+        else:
+            raise ValueError(errors)
 
     @classmethod
     def find_by_id(cls, shop_id):

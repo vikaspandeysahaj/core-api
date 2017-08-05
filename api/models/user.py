@@ -110,3 +110,8 @@ class User(storage.sql_db.Model):
     def find_by_mobile(cls, mobile_number):
         results = User.query.filter(User.mobile == mobile_number).all()
         return results[0] if results.__len__() > 0 else None
+
+    @classmethod
+    def find_by_email(cls, email):
+        results = User.query.filter(User.email == email).all()
+        return results[0] if results.__len__() > 0 else None

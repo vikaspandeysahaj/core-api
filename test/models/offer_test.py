@@ -28,7 +28,8 @@ class OfferTest(UnitTest):
                 'web_site': 'http://www.some_where_in_internet.com',
                 'shop_profile_banner_url': 'some_url',
                 'shop_profile_image_url': 'some_url',
-                'geo_location': 'some_where_in_map'
+                'geo_location': 'some_where_in_map',
+                'category': create_category().as_json()
             }
         self.shop1 = create_shop(shop_hash=shop_1_hash)
         self.offer = create_offer(category=self.category1, shop=self.shop1)

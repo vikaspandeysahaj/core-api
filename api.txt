@@ -51,9 +51,9 @@ offer
 
 api:
 
-1. register user
-2. get user profile
-3. update user profile
+1. register user : done
+2. get user profile : done
+3. update user profile : done
 
 4. register shop for user
 5. update shop profile

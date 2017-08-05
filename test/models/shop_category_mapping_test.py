@@ -17,6 +17,7 @@ from test.test_helper import UnitTest
 class CategoryTest(UnitTest):
     def setUp(self):
         super(CategoryTest, self).setUp()
+        self.category = create_category(title='other')
         self.category1 = create_category(title='electronics')
         self.category2 = create_category(title='food')
         shop_1_hash = {
@@ -27,7 +28,8 @@ class CategoryTest(UnitTest):
                 'web_site': 'http://www.some_where_in_internet.com',
                 'shop_profile_banner_url': 'some_url',
                 'shop_profile_image_url': 'some_url',
-                'geo_location': 'some_where_in_map'
+                'geo_location': 'some_where_in_map',
+                'category': self.category.as_json()
             }
         shop_2_hash = {
                 'name': 'myshop',
@@ -37,7 +39,8 @@ class CategoryTest(UnitTest):
                 'web_site': 'http://www.some_where_in_internet.com',
                 'shop_profile_banner_url': 'some_url',
                 'shop_profile_image_url': 'some_url',
-                'geo_location': 'some_where_in_map'
+                'geo_location': 'some_where_in_map',
+                'category': self.category.as_json()
             }
         self.shop1 = create_shop(shop_hash=shop_1_hash)
         self.shop2 = create_shop(shop_hash=shop_2_hash)
@@ -59,6 +62,6 @@ class CategoryTest(UnitTest):
         self.shop1.assign_category(self.category2)
         self.shop2.assign_category(self.category1)
         category_mapping = ShopCategoryMapping.find_by_shop_id(self.shop1.shop_id)
-        self.assertEquals(len(category_mapping), 2)
+        self.assertEquals(len(category_mapping), 3)
         category_mapping = ShopCategoryMapping.find_by_shop_id(self.shop2.shop_id)
-        self.assertEquals(len(category_mapping), 1)
+        self.assertEquals(len(category_mapping), 2)
