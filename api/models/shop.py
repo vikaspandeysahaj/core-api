@@ -33,7 +33,7 @@ class Shop(storage.sql_db.Model):
                  shop_profile_banner_url= None,
                  shop_profile_image_url= None,
                  geo_location= None,
-                 user = None):
+                 fk_user_id = None):
 
         self.shop_id = shop_id
         self.name = name
@@ -42,7 +42,7 @@ class Shop(storage.sql_db.Model):
         self.web_site=web_site
         self.shop_profile_banner_url = shop_profile_banner_url
         self.shop_profile_image_url = shop_profile_image_url
-        self.user = user
+        self.fk_user_id = fk_user_id
         self.geo_location =geo_location
 
     def as_json(self):
@@ -60,7 +60,7 @@ class Shop(storage.sql_db.Model):
         return property_hash
 
     @classmethod
-    def create_shop(cls, shop_hash=None, user=None):
+    def create_shop(cls, shop_hash=None):
         shop = Shop(shop_id= uuid.uuid1().hex,
                     name=shop_hash["name"],
                     phone=shop_hash["phone"],
@@ -68,7 +68,7 @@ class Shop(storage.sql_db.Model):
                     web_site=shop_hash["web_site"],
                     shop_profile_banner_url=shop_hash["shop_profile_banner_url"],
                     shop_profile_image_url=shop_hash["shop_profile_image_url"],
-                    user=user,
+                    fk_user_id=shop_hash['user'].user_id,
                     geo_location=shop_hash['geo_location'])
         category = shop_hash["category"]
         insert(shop)
@@ -108,3 +108,8 @@ class Shop(storage.sql_db.Model):
 
     def assign_category(self, category):
         return ShopCategoryMapping.create_category(category=category,shop=self)
+
+    @classmethod
+    def find_shops_by_user(cls, user):
+        results = Shop.query.filter(Shop.fk_user_id == user.user_id).all()
+        return results

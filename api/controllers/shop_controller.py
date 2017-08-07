@@ -8,6 +8,19 @@ from api.models.shop import Shop
 
 shop_routes = Blueprint("shop", "shop", static_folder='static')
 
+@shop_routes.route('/shop', methods=['POST'])
+@authenticate
+def list_shop_api():
+    try:
+        shops = Shop.find_shops_by_user(g.current_user)
+        return dumps([shop.as_json() for shop in shops]), 200
+    except ValueError as e:
+        return dumps(e.message), 400
+    except Exception as e:
+        print(e.message)
+        print(traceback.print_exc())
+        return dumps(e.message), 400
+
 
 @shop_routes.route('/shop/create', methods=['POST'])
 @authenticate
@@ -15,7 +28,8 @@ def create_shop_api():
     try:
         shop_hash = get_shop_json_attr_from_hash(request.json)
         if Shop.is_valid_hash_for_create(shop_hash):
-            shop = Shop.create_shop(shop_hash, g.current_user)
+            shop_hash['user'] = g.current_user
+            shop = Shop.create_shop(shop_hash)
             return dumps(shop.as_json()), 200
     except ValueError as e:
         return dumps(e.message), 400

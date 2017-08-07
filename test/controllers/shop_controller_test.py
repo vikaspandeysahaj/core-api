@@ -75,7 +75,7 @@ class ShopControllerTest(ServiceTest):
     def test_shop_update_api(self):
         headers_dict = {'EMAIL': self.user.email}
         shop_json = self.get_shop_json()
-        shop = create_shop(shop_hash=shop_json, user=self.user, category=self.category.as_json())
+        shop = create_shop(user=self.user, category=self.category.as_json())
         shop_json['name'] = 'changed_name'
         shop_json['phone'] = 898989889
         shop_json['address'] = 'some_address'
