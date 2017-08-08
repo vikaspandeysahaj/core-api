@@ -30,7 +30,7 @@ class ShopControllerTest(ServiceTest):
                         'shop_profile_banner_url': "shop_shop_profile_banner_url",
                         'shop_profile_image_url': "shop_shop_profile_image_url",
                         'geo_location': "shop_geo_location",
-                        'category': self.category.as_json()
+                        'fk_category_id': self.category.category_id
                     }
         return shop_request
 
@@ -56,7 +56,7 @@ class ShopControllerTest(ServiceTest):
 
     def test_get_shop_api(self):
         headers_dict = {'EMAIL': self.user.email}
-        shop = create_shop(user=self.user, category=self.category.as_json())
+        shop = create_shop(fk_user_id=self.user.user_id, fk_category_id=self.category.category_id)
         uri = "/shop/{shop_id}".format(shop_id=shop.shop_id)
         user_response = self.app.get(
             uri,
@@ -75,7 +75,7 @@ class ShopControllerTest(ServiceTest):
     def test_shop_update_api(self):
         headers_dict = {'EMAIL': self.user.email}
         shop_json = self.get_shop_json()
-        shop = create_shop(user=self.user, category=self.category.as_json())
+        shop = create_shop(fk_user_id=self.user.user_id, fk_category_id=self.category.category_id)
         shop_json['name'] = 'changed_name'
         shop_json['phone'] = 898989889
         shop_json['address'] = 'some_address'

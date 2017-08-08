@@ -68,17 +68,16 @@ class Shop(storage.sql_db.Model):
                     web_site=shop_hash["web_site"],
                     shop_profile_banner_url=shop_hash["shop_profile_banner_url"],
                     shop_profile_image_url=shop_hash["shop_profile_image_url"],
-                    fk_user_id=shop_hash['user'].user_id,
+                    fk_user_id=shop_hash['fk_user_id'],
                     geo_location=shop_hash['geo_location'])
-        category = shop_hash["category"]
         insert(shop)
-        category = Category.query.filter(Category.category_id == category['category_id']).all()[0]
+        category = Category.query.filter(Category.category_id == shop_hash['fk_category_id']).all()[0]
         created_shop = Shop.query.filter(Shop.shop_id == shop.shop_id).all()
         created_shop[0].assign_category(category=category)
         return created_shop[0] if created_shop is not None else None
 
     def update_shop_details(self, shop_hash):
-        del shop_hash['category']
+        del shop_hash['fk_category_id']
         update(Shop, Shop.shop_id == self.shop_id, shop_hash)
         shop = Shop.query.filter(Shop.shop_id == self.shop_id).all()
         return shop[0] if shop else None
@@ -92,8 +91,8 @@ class Shop(storage.sql_db.Model):
         mobile = shop_hash['geo_location']
         errors.append({"geo_location": "geo_location cannot be blank"}) if not mobile else None
 
-        category = shop_hash['category']
-        errors.append({"category": "category cannot be blank"}) if category.__len__()==0 else None
+        category = shop_hash['fk_category_id']
+        errors.append({"category": "category cannot be blank"}) if not category else None
 
 
         if not errors:

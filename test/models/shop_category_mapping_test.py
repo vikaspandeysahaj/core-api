@@ -22,25 +22,25 @@ class CategoryTest(UnitTest):
         self.category2 = create_category(title='food')
         shop_1_hash = {
                 'name': 'myshop1',
-                'user': create_user(mobile='123456789', email="test@test.com"),
+                'fk_user_id': create_user(mobile='123456789', email="test@test.com").user_id,
                 'phone': '123456789',
                 'address': 'some where in india',
                 'web_site': 'http://www.some_where_in_internet.com',
                 'shop_profile_banner_url': 'some_url',
                 'shop_profile_image_url': 'some_url',
                 'geo_location': 'some_where_in_map',
-                'category': self.category.as_json()
+                'fk_category_id': self.category.category_id
             }
         shop_2_hash = {
                 'name': 'myshop',
-                'user': create_user(mobile='987654321', email="test2@test.com"),
+                'fk_user_id': create_user(mobile='987654321', email="test2@test.com").user_id,
                 'phone': '123456789',
                 'address': 'some where in india',
                 'web_site': 'http://www.some_where_in_internet.com',
                 'shop_profile_banner_url': 'some_url',
                 'shop_profile_image_url': 'some_url',
                 'geo_location': 'some_where_in_map',
-                'category': self.category.as_json()
+                'fk_category_id': self.category.category_id
             }
         self.shop1 = create_shop(shop_hash=shop_1_hash)
         self.shop2 = create_shop(shop_hash=shop_2_hash)

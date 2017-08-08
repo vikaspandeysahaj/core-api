@@ -15,7 +15,7 @@ class ShopTest(UnitTest):
     def setUp(self):
         super(ShopTest, self).setUp()
         self.user = create_user()
-        self.shop = create_shop(user=self.user)
+        self.shop = create_shop(fk_user_id=self.user.user_id)
 
     def tearDown(self):
         super(ShopTest, self).tearDown()
@@ -29,8 +29,8 @@ class ShopTest(UnitTest):
         self.assertEqual(None, shop)
 
     def test_should_return_list_of_shop_by_user(self):
-        create_shop(user=self.user)
-        create_shop(user=self.user)
-        create_shop(user=self.user)
+        create_shop(fk_user_id=self.user.user_id)
+        create_shop(fk_user_id=self.user.user_id)
+        create_shop(fk_user_id=self.user.user_id)
         shop = Shop.find_shops_by_user(self.user)
         self.assertEqual(len(shop), 4)

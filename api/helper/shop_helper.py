@@ -7,6 +7,6 @@ def get_shop_json_attr_from_hash(shop_hash):
             'shop_profile_banner_url': shop_hash.get("shop_profile_banner_url"),
             'shop_profile_image_url': shop_hash.get("shop_profile_image_url"),
             'geo_location': shop_hash.get("geo_location"),
-            'category': shop_hash.get("category")
+            'fk_category_id': shop_hash.get("fk_category_id")
 
     }

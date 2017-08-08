@@ -8,6 +8,7 @@ from api.models.shop import Shop
 
 shop_routes = Blueprint("shop", "shop", static_folder='static')
 
+
 @shop_routes.route('/shop', methods=['POST'])
 @authenticate
 def list_shop_api():
@@ -28,7 +29,7 @@ def create_shop_api():
     try:
         shop_hash = get_shop_json_attr_from_hash(request.json)
         if Shop.is_valid_hash_for_create(shop_hash):
-            shop_hash['user'] = g.current_user
+            shop_hash['fk_user_id'] = g.current_user.user_id
             shop = Shop.create_shop(shop_hash)
             return dumps(shop.as_json()), 200
     except ValueError as e:
