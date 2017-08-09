@@ -1,7 +1,11 @@
 
 from flask import json
+from json import dumps
 
+from api.models.shop import Shop
+from test.support.factories.category_factory import create_category
 from test.support.factories.role_factory import create_role
+from test.support.factories.shop_factory import create_shop
 from test.support.factories.user_factory import create_user
 from test.test_helper import ServiceTest
 
@@ -12,6 +16,7 @@ class UserControllerTest(ServiceTest):
         create_role('user')
         create_role('admin')
         create_role('shop')
+        self.category = create_category()
 
     def tearDown(self):
         super(UserControllerTest, self).tearDown()
@@ -78,3 +83,27 @@ class UserControllerTest(ServiceTest):
         self.assertEqual('898989898899', json_user['mobile'])
         self.assertEqual(user_json['about'], json_user['about'])
         self.assertEqual(user_json['geo_location'], json_user['geo_location'])
+
+    def test_get_home_api(self):
+        user_json = self.get_user_json()
+        user = create_user(user_json)
+        headers_dict = {'EMAIL': user.email}
+        shop_1 = create_shop(fk_user_id=user.user_id, fk_category_id=self.category.category_id)
+        shop_2 = create_shop(fk_user_id=user.user_id, fk_category_id=self.category.category_id)
+        uri = "/user/{user_id}/home".format(user_id=user.user_id)
+        home_response = self.app.get(
+            uri,
+            headers=headers_dict
+        )
+        self.assertEqual(200, home_response.status_code)
+        json_home = json.loads(home_response.data)
+
+        home = {
+            'banners': [],
+            'shops': dumps([shop.as_json() for shop in Shop.find_shops_by_user(user=user)]),
+            'offers': [],
+            'recommended': [],
+            'recent_view': [],
+        }
+
+        self.assertEqual(dumps(home), dumps(json_home))

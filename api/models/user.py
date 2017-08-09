@@ -1,5 +1,5 @@
 import uuid
-
+from json import dumps
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import relationship
@@ -7,6 +7,7 @@ from sqlalchemy.orm import relationship
 from api.db_storage import storage
 from api.helper.db_helper import insert, update
 from api.models.role import Role
+from api.models.shop import Shop
 
 
 class User(storage.sql_db.Model):
@@ -115,3 +116,13 @@ class User(storage.sql_db.Model):
     def find_by_email(cls, email):
         results = User.query.filter(User.email == email).all()
         return results[0] if results.__len__() > 0 else None
+
+    def get_home_page_for_user(self):
+        home = {
+            'banners': [],
+            'shops': dumps([shop.as_json() for shop in Shop.find_shops_by_user(user=self)]) ,
+            'offers': [],
+            'recommended': [],
+            'recent_view': [],
+        }
+        return home

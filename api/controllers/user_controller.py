@@ -35,6 +35,7 @@ def get_profile(user_id):
         print(traceback.print_exc())
         return dumps(e.message), 400
 
+
 @user_routes.route('/user/<user_id>/update', methods=['POST'])
 def update_profile(user_id):
     try:
@@ -43,6 +44,21 @@ def update_profile(user_id):
         if user:
             user = user.update_profile(user_hash)
             return dumps(user.as_json()), 200
+        else:
+            return dumps({"Error":"User Not found"}), 400
+    except Exception as e:
+        print(e.message)
+        print(traceback.print_exc())
+        return dumps(e.message), 400
+
+
+@user_routes.route('/user/<user_id>/home', methods=['GET'])
+def home_api(user_id):
+    try:
+        user = User.find_by_id(user_id)
+        if user:
+            home_data = user.get_home_page_for_user()
+            return dumps(home_data), 200
         else:
             return dumps({"Error":"User Not found"}), 400
     except Exception as e:
