@@ -97,3 +97,16 @@ class ShopControllerTest(ServiceTest):
         self.assertEqual(shop_json['geo_location'], json_user['geo_location'])
         self.assertEqual(shop_json['shop_profile_banner_url'], json_user['shop_profile_banner_url'])
         self.assertEqual(shop_json['shop_profile_image_url'], json_user['shop_profile_image_url'])
+
+    def test_get_all_shop_api(self):
+        headers_dict = {'EMAIL': self.user.email}
+        shop_1 = create_shop(fk_user_id=self.user.user_id, fk_category_id=self.category.category_id)
+        shop_2 = create_shop(fk_user_id=self.user.user_id, fk_category_id=self.category.category_id)
+        uri = "/shop"
+        user_response = self.app.get(
+            uri,
+            headers=headers_dict
+        )
+        self.assertEqual(200, user_response.status_code)
+        json_shop = json.loads(user_response.data)
+        self.assertEqual(2, len(json_shop))

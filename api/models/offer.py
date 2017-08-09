@@ -5,7 +5,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float
 from sqlalchemy.orm import relationship
 
 from api.db_storage import storage
-from api.helper.db_helper import insert
+from api.helper.db_helper import insert, update
 from api.models.category import Category
 from api.models.shop import Shop
 
@@ -116,3 +116,8 @@ class Offer(storage.sql_db.Model):
             return True
         else:
             raise ValueError(errors)
+
+    def update_offer_details(self, offer_hash):
+        update(Offer, Offer.offer_id == self.offer_id, offer_hash)
+        offer = Offer.query.filter(Offer.offer_id == self.offer_id).all()
+        return offer[0] if offer else None

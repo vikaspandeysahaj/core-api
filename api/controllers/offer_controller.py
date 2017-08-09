@@ -27,12 +27,12 @@ def create_offer_api(shop_id):
         return dumps(e.message), 400
 
 
-
-@offer_routes.route('/offer', methods=['POST'])
+@offer_routes.route('/shop/<shop_id>/offer', methods=['GET'])
 @authenticate
-def list_offer_api():
+def list_offer_api(shop_id):
     try:
-        offers = Offer.find_offers_by_user(g.current_user)
+        shop = Shop.find_by_id(shop_id=shop_id)
+        offers = Offer.find_by_shop(shop)
         return dumps([offer.as_json() for offer in offers]), 200
     except ValueError as e:
         return dumps(e.message), 400
@@ -40,7 +40,6 @@ def list_offer_api():
         print(e.message)
         print(traceback.print_exc())
         return dumps(e.message), 400
-
 
 
 @offer_routes.route('/offer/<offer_id>', methods=['GET'])

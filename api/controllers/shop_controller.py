@@ -9,7 +9,7 @@ from api.models.shop import Shop
 shop_routes = Blueprint("shop", "shop", static_folder='static')
 
 
-@shop_routes.route('/shop', methods=['POST'])
+@shop_routes.route('/shop', methods=['GET'])
 @authenticate
 def list_shop_api():
     try:
